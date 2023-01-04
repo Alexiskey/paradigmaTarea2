@@ -173,10 +173,10 @@ int main(int argc, char **argv){
 	dim3 grid((n+nb-1)/nb, (n+nb-1)/nb, 1);
 	//char tecla = getchar();
 	
-	cudaEvent_t start, stop;
-	cudaEventCreate(&start); 
-	cudaEventCreate(&stop);
-	cudaEventRecord(start);
+	cudaEvent_t start, stop; float msecs;
+        cudaEventCreate(&start); cudaEventCreate(&stop);
+        cudaEventRecord(start);
+	
 	if(mode == 0){
 		for(int i=0; i<pasos; ++i){
 			cpu_sim(a, b, n);
@@ -189,10 +189,9 @@ int main(int argc, char **argv){
 			std::swap(ad,bd);
 		}
 	}
-	cudaDeviceSynchronize(); 
-	cudaEventRecord(stop);
-	cudaEventSynchronize(stop);
-	cudaEventElapsedTime(&msecs, start, stop);
+	cudaDeviceSynchronize(); cudaEventRecord(stop);
+        cudaEventSynchronize(stop); cudaEventElapsedTime(&msecs, start, stop);
+
 	
 	if (mode == 1) {
 		cudaMemcpy(b,bd,sizeof(int)*n*n, cudaMemcpyDeviceToHost);
